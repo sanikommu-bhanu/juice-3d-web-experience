@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Liquid Vitality — Nature's Purest</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════
+   ROOT VARIABLES & RESET
+══════════════════════════════════════════ */
+:root{
+  --orange:#F47B20;--orange-dark:#C8511A;--orange-light:#FFAD60;
+  --cream:#FFF8F0;--dark:#1A0F08;--dark2:#2A1A0E;
+  --green:#276749;--red:#E53E3E;--gray:#F5F2EF;
+  --text-muted:#8A7060;--border:rgba(0,0,0,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:#fff;color:var(--dark);overflow-x:hidden;cursor:none;}
+
+/* ══════════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════════ */
+.cursor{position:fixed;width:12px;height:12px;background:var(--orange);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;}
+.cursor-ring{position:fixed;width:38px;height:38px;border:1.5px solid var(--orange);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all .15s ease;opacity:.55;}
+
+/* ══════════════════════════════════════════
+   PAGE SYSTEM — only one page visible at a time
+══════════════════════════════════════════ */
+.page{display:none;}
+.page.active{display:block;}
+
+/* ══════════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════════ */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:16px 52px;transition:background .4s,backdrop-filter .4s;}
+nav.sc{background:rgba(255,255,255,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);box-shadow:0 2px 20px rgba(0,0,0,.06);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:none;}
+.logo-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:14px;letter-spacing:1px;flex-shrink:0;}
+nav:not(.sc) .logo-icon{background:rgba(255,255,255,.2);color:white;}
+nav.sc .logo-icon{background:var(--orange);color:white;}
+.logo-icon img{width:100%;height:100%;border-radius:8px;object-fit:cover;display:none;}
+.logo-icon img.loaded{display:block;}
+.logo-icon img.loaded + span{display:none;}
+.logo-name{font-weight:800;font-size:18px;letter-spacing:-.5px;}
+nav:not(.sc) .logo-name{color:white;}
+nav.sc .logo-name{color:var(--dark);}
+.nav-center{display:flex;gap:32px;list-style:none;}
+.nav-center a{text-decoration:none;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;transition:color .2s;cursor:none;}
+nav:not(.sc) .nav-center a{color:rgba(255,255,255,.8);}
+nav:not(.sc) .nav-center a:hover{color:#fff;}
+nav.sc .nav-center a{color:var(--dark);}
+nav.sc .nav-center a:hover{color:var(--orange);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.btn-nav{padding:10px 22px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border-radius:100px;cursor:none;border:none;transition:all .25s;font-family:'Outfit',sans-serif;}
+.btn-nav-ghost{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.45);color:white;}
+nav.sc .btn-nav-ghost{background:transparent;border:1.5px solid var(--dark);color:var(--dark);}
+.btn-nav-ghost:hover{background:rgba(255,255,255,.25);}
+nav.sc .btn-nav-ghost:hover{background:var(--dark);color:white;}
+.btn-nav-solid{background:var(--orange);color:white;border:1.5px solid var(--orange);}
+.btn-nav-solid:hover{background:var(--orange-dark);}
+nav:not(.sc) .btn-nav-solid{background:white;color:var(--dark);border-color:white;}
+nav:not(.sc) .btn-nav-solid:hover{background:var(--dark);color:white;border-color:var(--dark);}
+.user-pill{display:flex;align-items:center;gap:10px;padding:7px 16px;background:var(--orange);border-radius:100px;cursor:none;}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;}
+.user-name-nav{font-size:12px;font-weight:700;color:white;letter-spacing:.5px;}
+
+/* ══════════════════════════════════════════
+   HERO SECTION
+══════════════════════════════════════════ */
+#hero-section{position:relative;width:100%;height:100vh;overflow:hidden;display:flex;align-items:center;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 65% 35%,#FFAD60 0%,#F47B20 35%,#C8511A 62%,#7A2D08 100%);}
+.hero-bg-img{position:absolute;inset:0;z-index:1;}
+.hero-bg-img img{width:100%;height:100%;object-fit:cover;opacity:.45;mix-blend-mode:multiply;}
+.pts{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none;}
+.pt{position:absolute;border-radius:50%;background:rgba(255,255,255,.18);animation:pfloat linear infinite;}
+@keyframes pfloat{0%{transform:translateY(110vh) scale(0);opacity:0;}10%{opacity:.8;}90%{opacity:.25;}100%{transform:translateY(-15vh) scale(1);opacity:0;}}
+.hero-inner{position:relative;z-index:5;padding:0 52px;display:flex;align-items:center;justify-content:space-between;width:100%;}
+.hero-left{max-width:580px;}
+.hero-eyebrow{font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:22px;animation:fup .8s ease .2s both;}
+.hero-title{font-family:'Bebas Neue';font-size:clamp(80px,12vw,165px);color:white;line-height:.9;letter-spacing:3px;text-shadow:0 8px 40px rgba(0,0,0,.2);animation:fup .9s ease .35s both;}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.72);line-height:1.75;margin-top:22px;max-width:380px;animation:fup 1s ease .5s both;}
+.hero-ctas{display:flex;gap:14px;margin-top:36px;animation:fup 1s ease .65s both;}
+.btn-hero-p{padding:15px 34px;background:white;color:var(--dark);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border-radius:100px;transition:all .25s;cursor:none;border:none;font-family:'Outfit',sans-serif;}
+.btn-hero-p:hover{background:var(--dark);color:white;transform:translateY(-2px);}
+.btn-hero-g{padding:15px 34px;border:1.5px solid rgba(255,255,255,.5);color:white;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border-radius:100px;transition:all .25s;cursor:none;background:transparent;font-family:'Outfit',sans-serif;}
+.btn-hero-g:hover{background:rgba(255,255,255,.15);}
+.hero-right{position:relative;z-index:5;animation:fin 1.2s ease .4s both;}
+.hero-bottle-wrap{position:relative;}
+.hero-bottle-wrap .bottle-img{width:clamp(240px,26vw,400px);height:auto;object-fit:contain;filter:drop-shadow(0 32px 64px rgba(0,0,0,.4));animation:bfloat 6s ease-in-out infinite;}
+@keyframes bfloat{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(-22px) rotate(2.5deg);}}
+.htag{position:absolute;background:rgba(255,255,255,.15);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.3);border-radius:100px;padding:8px 16px;font-size:11px;font-weight:600;color:white;white-space:nowrap;animation:fin 1.2s ease both;}
+.ht1{top:10%;left:-30px;animation-delay:.9s;}.ht2{top:48%;right:-20px;animation-delay:1.1s;}.ht3{bottom:18%;left:-10px;animation-delay:1.3s;}
+.hero-scroll{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);z-index:6;display:flex;flex-direction:column;align-items:center;gap:10px;animation:fin 1.4s ease 1.2s both;}
+.hs-lbl{font-size:9px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.55);}
+.hs-bar{width:1px;height:52px;background:linear-gradient(to bottom,rgba(255,255,255,.6),transparent);animation:sp 2.2s ease infinite;}
+@keyframes sp{0%,100%{opacity:.5;}50%{opacity:1;}}
+
+/* ══════════════════════════════════════════
+   TICKER
+══════════════════════════════════════════ */
+.ticker{background:var(--dark);padding:14px 0;overflow:hidden;}
+.ticker-t{display:flex;animation:tick 26s linear infinite;white-space:nowrap;}
+.ti{padding:0 28px;font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:26px;}
+.tdot{width:4px;height:4px;border-radius:50%;background:var(--orange);flex-shrink:0;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ══════════════════════════════════════════
+   CANVAS FRAME SCROLL
+══════════════════════════════════════════ */
+#fs1{position:relative;height:450vh;}
+.fsticky{position:sticky;top:0;height:100vh;overflow:hidden;}
+#fc1{display:block;width:100%;height:100%;}
+.foverlay{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;background:linear-gradient(to right,rgba(0,0,0,.52) 0%,rgba(0,0,0,.15) 50%,transparent 100%);}
+.ftxt{margin-left:7%;max-width:440px;color:white;}
+.ftxt h2{font-family:'Bebas Neue';font-size:clamp(56px,8vw,104px);line-height:.9;letter-spacing:3px;text-shadow:0 4px 30px rgba(0,0,0,.3);transition:opacity .35s,transform .35s;}
+.ftxt p{font-size:16px;line-height:1.75;color:rgba(255,255,255,.8);margin-top:18px;text-shadow:0 2px 12px rgba(0,0,0,.3);}
+.fprogress{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:14px;}
+.fpt{width:130px;height:2.5px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden;}
+.fpf{height:100%;background:white;border-radius:3px;width:0%;transition:width .1s;}
+.fplbl{font-size:10px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.5);text-transform:uppercase;}
+
+/* ══════════════════════════════════════════
+   FEATURE SPLIT
+══════════════════════════════════════════ */
+#feat-sec{display:grid;grid-template-columns:1fr 1fr;min-height:88vh;}
+.fi{overflow:hidden;}
+.fi img{width:100%;height:100%;object-fit:cover;transition:transform .8s;}
+.fi:hover img{transform:scale(1.04);}
+.fc-content{background:var(--cream);display:flex;flex-direction:column;justify-content:center;padding:80px 72px;}
+.pill-tag{display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:white;padding:8px 18px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:28px;width:fit-content;}
+.fc-content h2{font-family:'Bebas Neue';font-size:clamp(52px,6vw,86px);line-height:.92;letter-spacing:2px;color:var(--dark);margin-bottom:22px;}
+.fc-content p{font-size:16px;line-height:1.75;color:#5A4A3A;margin-bottom:36px;max-width:360px;}
+.btn-dark{display:inline-flex;align-items:center;gap:10px;background:var(--dark);color:white;padding:16px 32px;border-radius:100px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;width:fit-content;transition:all .25s;cursor:none;border:none;font-family:'Outfit',sans-serif;}
+.btn-dark:hover{background:var(--orange);transform:translateY(-2px);}
+.stats-row{display:flex;gap:48px;margin-top:48px;padding-top:40px;border-top:1px solid rgba(0,0,0,.1);}
+.sn{font-family:'Bebas Neue';font-size:44px;color:var(--orange);line-height:1;}
+.sl{font-size:11px;font-weight:600;letter-spacing:1.5px;color:#8A7060;text-transform:uppercase;}
+
+/* ══════════════════════════════════════════
+   PRODUCTS SECTION
+══════════════════════════════════════════ */
+#products-sec{padding:100px 0 70px;background:#fff;}
+.sec-header{display:flex;align-items:flex-end;justify-content:space-between;padding:0 64px;margin-bottom:52px;}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--orange);margin-bottom:12px;}
+.sec-header h2{font-family:'Bebas Neue';font-size:clamp(48px,6vw,80px);color:var(--dark);letter-spacing:2px;line-height:1;}
+.ctrls{display:flex;gap:12px;}
+.cbtn{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--dark);background:transparent;cursor:none;display:flex;align-items:center;justify-content:center;font-size:18px;transition:all .2s;font-family:'Outfit',sans-serif;}
+.cbtn:hover{background:var(--dark);color:white;}
+.cwrap{overflow:hidden;padding:0 64px;cursor:grab;user-select:none;}
+.cwrap:active{cursor:grabbing;}
+.cinner{display:flex;gap:24px;transition:transform .5s cubic-bezier(.25,.46,.45,.94);}
+.pcard{flex-shrink:0;width:268px;border-radius:20px;overflow:hidden;border:1px solid var(--border);transition:transform .35s,box-shadow .35s;background:#fff;}
+.pcard:hover{transform:translateY(-9px);box-shadow:0 28px 64px rgba(0,0,0,.12);}
+.pimg{height:240px;overflow:hidden;position:relative;}
+.pimg img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.pcard:hover .pimg img{transform:scale(1.08);}
+.pbadge{position:absolute;top:14px;right:14px;background:var(--orange);color:white;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:100px;}
+.pbody{padding:20px 22px 22px;}
+.pname{font-weight:700;font-size:16px;}
+.pdesc{font-size:12px;color:#7A6A5A;margin-top:6px;line-height:1.5;}
+.pfoot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;}
+.pprice{font-family:'Bebas Neue';font-size:26px;color:var(--orange);}
+.abtn{width:36px;height:36px;border-radius:50%;background:var(--dark);color:white;border:none;cursor:none;font-size:20px;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;flex-shrink:0;}
+.abtn:hover{background:var(--orange);transform:rotate(90deg);}
+
+/* ══════════════════════════════════════════
+   KIWI BANNER
+══════════════════════════════════════════ */
+#kiwi-sec{position:relative;height:65vh;overflow:hidden;}
+#kiwi-sec img{width:100%;height:100%;object-fit:cover;}
+.kov{position:absolute;inset:0;background:linear-gradient(to right,rgba(15,40,5,.75) 0%,rgba(0,0,0,.1) 55%,transparent 100%);display:flex;align-items:center;padding:0 80px;}
+.kov h2{font-family:'Bebas Neue';font-size:clamp(60px,9vw,120px);color:white;line-height:.9;letter-spacing:3px;}
+.kov p{color:rgba(255,255,255,.75);font-size:15px;max-width:300px;line-height:1.75;margin-top:18px;}
+
+/* ══════════════════════════════════════════
+   CANVAS SECTION 2
+══════════════════════════════════════════ */
+#fs2{position:relative;height:350vh;}
+.fsticky2{position:sticky;top:0;height:100vh;overflow:hidden;}
+#fc2{display:block;width:100%;height:100%;}
+.f2txt{position:absolute;top:50%;right:8%;transform:translateY(-50%);color:white;text-align:right;max-width:380px;z-index:10;pointer-events:none;}
+.f2txt h2{font-family:'Bebas Neue';font-size:clamp(50px,7vw,92px);line-height:.9;letter-spacing:3px;text-shadow:0 4px 24px rgba(0,0,0,.4);}
+.f2txt p{font-size:15px;color:rgba(255,255,255,.75);line-height:1.75;margin-top:16px;}
+
+/* ══════════════════════════════════════════
+   WELLNESS
+══════════════════════════════════════════ */
+#wellness-sec{background:var(--cream);padding:120px 64px;}
+.sh{margin-bottom:60px;}
+.sh h2{font-family:'Bebas Neue';font-size:clamp(48px,6vw,82px);letter-spacing:2px;line-height:1;color:var(--dark);}
+.wg{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.wcard{background:#fff;border-radius:20px;overflow:hidden;transition:transform .35s,box-shadow .35s;}
+.wcard:hover{transform:translateY(-7px);box-shadow:0 22px 52px rgba(0,0,0,.1);}
+.wcimg{height:220px;overflow:hidden;}
+.wcimg img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.wcard:hover .wcimg img{transform:scale(1.07);}
+.wcb{padding:28px;}
+.wcb h3{font-weight:700;font-size:19px;margin-bottom:10px;}
+.wcb p{font-size:13px;color:#7A6A5A;line-height:1.65;}
+.wl{display:inline-flex;align-items:center;gap:6px;color:var(--orange);font-size:12px;font-weight:700;letter-spacing:1px;text-decoration:none;margin-top:16px;text-transform:uppercase;transition:gap .2s;cursor:none;}
+.wl:hover{gap:10px;}
+
+/* ══════════════════════════════════════════
+   TESTIMONIALS
+══════════════════════════════════════════ */
+#reviews-sec{padding:120px 64px;background:var(--dark);}
+#reviews-sec .sec-lbl{color:var(--orange-light);}
+#reviews-sec h2{font-family:'Bebas Neue';font-size:clamp(48px,6vw,80px);color:white;letter-spacing:2px;margin-bottom:60px;}
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.rcard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px;transition:background .3s,transform .3s;}
+.rcard:hover{background:rgba(255,255,255,.09);transform:translateY(-4px);}
+.rstars{color:var(--orange);font-size:16px;letter-spacing:3px;margin-bottom:18px;}
+.rtxt{font-size:15px;line-height:1.78;color:rgba(255,255,255,.8);font-style:italic;margin-bottom:24px;}
+.rauth{display:flex;align-items:center;gap:14px;}
+.ravt{width:46px;height:46px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--orange);}
+.ravt img{width:100%;height:100%;object-fit:cover;}
+.rname{font-weight:700;font-size:14px;color:white;}
+.rrole{font-size:11px;color:rgba(255,255,255,.4);margin-top:2px;}
+
+/* ══════════════════════════════════════════
+   PARTNERS
+══════════════════════════════════════════ */
+#partners-sec{padding:80px 64px;background:#fff;}
+.pbox{border:1px solid var(--border);border-radius:20px;padding:52px 64px;}
+.plbl{text-align:center;font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#B0A098;margin-bottom:40px;}
+.plgs{display:flex;align-items:center;justify-content:space-around;gap:32px;flex-wrap:wrap;}
+.plg{font-family:'Bebas Neue';font-size:28px;color:#C0B0A8;letter-spacing:3px;transition:color .3s;cursor:default;}
+.plg:hover{color:var(--orange);}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer{background:var(--dark);padding:80px 64px 40px;}
+.fg{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:72px;}
+.fbrand p{font-size:14px;color:rgba(255,255,255,.4);line-height:1.75;margin-top:16px;max-width:280px;}
+.fcol h4{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:20px;}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.fcol a,.fcol button{font-size:14px;color:rgba(255,255,255,.6);text-decoration:none;transition:color .2s;cursor:none;background:none;border:none;font-family:'Outfit',sans-serif;text-align:left;padding:0;}
+.fcol a:hover,.fcol button:hover{color:var(--orange);}
+.fb{display:flex;align-items:center;justify-content:space-between;padding-top:36px;border-top:1px solid rgba(255,255,255,.08);}
+.fcopy{font-size:12px;color:rgba(255,255,255,.28);}
+.fsocs{display:flex;gap:14px;}
+.fsoc{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,.45);font-size:12px;font-weight:700;transition:all .2s;cursor:none;}
+.fsoc:hover{background:var(--orange);border-color:var(--orange);color:white;}
+
+/* ══════════════════════════════════════════
+   MODAL SYSTEM
+══════════════════════════════════════════ */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px;}
+.modal-backdrop.open{display:flex;}
+.modal{background:#fff;border-radius:24px;width:100%;max-width:480px;overflow:hidden;animation:modalIn .35s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes modalIn{from{opacity:0;transform:scale(.88) translateY(20px);}to{opacity:1;transform:none;}}
+.modal-header{padding:32px 36px 0;display:flex;align-items:center;justify-content:space-between;}
+.modal-header h2{font-family:'Bebas Neue';font-size:36px;letter-spacing:2px;}
+.modal-close{width:36px;height:36px;border-radius:50%;background:var(--gray);border:none;cursor:none;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.modal-close:hover{background:#e0dcda;}
+.modal-body{padding:28px 36px 36px;}
+.modal-sub{font-size:14px;color:var(--text-muted);margin-bottom:28px;line-height:1.6;}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dark);margin-bottom:8px;}
+.form-input{width:100%;padding:14px 18px;border:1.5px solid #E0D8D2;border-radius:12px;font-size:15px;font-family:'Outfit',sans-serif;color:var(--dark);outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:var(--orange);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-full{width:100%;padding:16px;background:var(--orange);color:white;border:none;border-radius:12px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;font-family:'Outfit',sans-serif;transition:background .2s,transform .2s;margin-top:8px;}
+.btn-full:hover{background:var(--orange-dark);transform:translateY(-1px);}
+.modal-switch{text-align:center;margin-top:18px;font-size:14px;color:var(--text-muted);}
+.modal-switch a{color:var(--orange);font-weight:700;text-decoration:none;cursor:none;}
+.modal-switch a:hover{text-decoration:underline;}
+.divider{display:flex;align-items:center;gap:14px;margin:20px 0;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#E0D8D2;}
+.divider span{font-size:12px;color:#B0A098;font-weight:600;}
+.social-auth{display:flex;gap:10px;}
+.btn-social{flex:1;padding:13px;border:1.5px solid #E0D8D2;border-radius:10px;background:white;cursor:none;font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.btn-social:hover{border-color:var(--orange);background:#FFF5ED;}
+
+/* ══════════════════════════════════════════
+   TOAST NOTIFICATION
+══════════════════════════════════════════ */
+.toast{position:fixed;bottom:32px;right:32px;z-index:99999;background:var(--dark);color:white;padding:16px 24px;border-radius:14px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.3);transform:translateY(100px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);max-width:340px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-icon{font-size:20px;flex-shrink:0;}
+
+/* ══════════════════════════════════════════
+   CART SIDEBAR
+══════════════════════════════════════════ */
+.cart-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:none;}
+.cart-backdrop.open{display:block;}
+.cart-sidebar{position:fixed;top:0;right:-500px;width:420px;height:100vh;background:white;z-index:8001;transition:right .4s cubic-bezier(.25,.46,.45,.94);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,.15);}
+.cart-sidebar.open{right:0;}
+.cart-top{padding:28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.cart-top h3{font-family:'Bebas Neue';font-size:28px;letter-spacing:2px;}
+.cart-close{width:36px;height:36px;border-radius:50%;background:var(--gray);border:none;cursor:none;font-size:18px;display:flex;align-items:center;justify-content:center;}
+.cart-items{flex:1;overflow-y:auto;padding:20px 28px;}
+.cart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;color:var(--text-muted);}
+.cart-empty-icon{font-size:52px;}
+.cart-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);}
+.ci-img{width:64px;height:64px;border-radius:10px;overflow:hidden;flex-shrink:0;}
+.ci-img img{width:100%;height:100%;object-fit:cover;}
+.ci-info{flex:1;}
+.ci-name{font-weight:700;font-size:14px;}
+.ci-price{font-family:'Bebas Neue';font-size:20px;color:var(--orange);margin-top:2px;}
+.ci-qty{display:flex;align-items:center;gap:12px;margin-top:8px;}
+.qty-btn{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:white;cursor:none;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.qty-btn:hover{border-color:var(--orange);color:var(--orange);}
+.qty-num{font-weight:700;font-size:14px;min-width:16px;text-align:center;}
+.ci-remove{background:none;border:none;color:#C0A898;cursor:none;font-size:18px;align-self:flex-start;transition:color .2s;}
+.ci-remove:hover{color:var(--red);}
+.cart-bottom{padding:24px 28px;border-top:1px solid var(--border);}
+.cart-total{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.cart-total span:first-child{font-size:14px;font-weight:600;color:var(--text-muted);}
+.cart-total-price{font-family:'Bebas Neue';font-size:32px;color:var(--dark);}
+.btn-checkout{width:100%;padding:17px;background:var(--orange);color:white;border:none;border-radius:14px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:none;font-family:'Outfit',sans-serif;transition:background .2s;}
+.btn-checkout:hover{background:var(--orange-dark);}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--red);color:white;width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;display:none;}
+.cart-badge.show{display:flex;}
+.cart-btn-wrap{position:relative;}
+
+/* ══════════════════════════════════════════
+   PRODUCTS PAGE (full shop)
+══════════════════════════════════════════ */
+.page-hero{padding:140px 64px 80px;background:var(--dark);position:relative;overflow:hidden;}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(244,123,32,.2),transparent 65%);}
+.page-hero h1{font-family:'Bebas Neue';font-size:clamp(64px,10vw,120px);color:white;letter-spacing:3px;line-height:.9;position:relative;}
+.page-hero h1 span{color:var(--orange);}
+.page-hero p{font-size:16px;color:rgba(255,255,255,.6);margin-top:18px;max-width:480px;line-height:1.75;position:relative;}
+.page-body{padding:64px;}
+.products-full-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:28px;}
+
+/* ══════════════════════════════════════════
+   BILLING PAGE
+══════════════════════════════════════════ */
+.billing-layout{display:grid;grid-template-columns:1fr 380px;gap:40px;padding:64px;align-items:start;padding-top:120px;}
+.billing-left h1{font-family:'Bebas Neue';font-size:56px;letter-spacing:2px;margin-bottom:8px;}
+.billing-left>p{color:var(--text-muted);margin-bottom:40px;}
+.plan-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px;}
+.plan-card{border:2px solid var(--border);border-radius:18px;padding:28px;transition:all .3s;cursor:none;position:relative;overflow:hidden;}
+.plan-card:hover{border-color:var(--orange);transform:translateY(-3px);}
+.plan-card.selected{border-color:var(--orange);background:#FFF5ED;}
+.plan-card.popular::before{content:'POPULAR';position:absolute;top:14px;right:-20px;background:var(--orange);color:white;font-size:9px;font-weight:700;letter-spacing:2px;padding:4px 28px;transform:rotate(35deg);}
+.plan-name{font-weight:800;font-size:18px;margin-bottom:4px;}
+.plan-price{font-family:'Bebas Neue';font-size:44px;color:var(--orange);line-height:1;margin:12px 0 6px;}
+.plan-price span{font-family:'Outfit';font-size:14px;color:var(--text-muted);font-weight:400;}
+.plan-desc{font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.plan-features li{font-size:13px;display:flex;align-items:center;gap:8px;color:#4A3A2A;}
+.plan-features li::before{content:'✓';color:var(--green);font-weight:800;font-size:12px;}
+.billing-section{background:white;border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:20px;}
+.billing-section h3{font-weight:700;font-size:18px;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.card-icons{display:flex;gap:8px;margin-bottom:16px;}
+.card-icon{width:40px;height:26px;border-radius:4px;background:#E0D8D2;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#8A7060;}
+.order-summary{background:var(--cream);border-radius:20px;padding:32px;position:sticky;top:90px;}
+.order-summary h3{font-family:'Bebas Neue';font-size:26px;letter-spacing:2px;margin-bottom:24px;}
+.summary-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(0,0,0,.06);}
+.summary-item:last-of-type{border-bottom:none;}
+.summary-item span:first-child{font-size:14px;color:#5A4A3A;}
+.summary-item span:last-child{font-weight:700;font-size:14px;}
+.summary-total{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:2px solid rgba(0,0,0,.1);margin-top:8px;}
+.summary-total span:first-child{font-weight:700;font-size:16px;}
+.summary-total-price{font-family:'Bebas Neue';font-size:36px;color:var(--orange);}
+
+/* ══════════════════════════════════════════
+   ACCOUNT PAGE
+══════════════════════════════════════════ */
+.account-layout{display:grid;grid-template-columns:280px 1fr;gap:0;min-height:100vh;padding-top:74px;}
+.account-sidebar{background:var(--dark);padding:48px 32px;}
+.account-sidebar .user-info{margin-bottom:40px;}
+.user-big-avatar{width:72px;height:72px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue';font-size:32px;color:white;margin-bottom:14px;border:3px solid rgba(255,255,255,.2);}
+.account-username{font-weight:800;font-size:18px;color:white;}
+.account-email{font-size:13px;color:rgba(255,255,255,.4);margin-top:4px;}
+.account-nav-item{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:10px;cursor:none;color:rgba(255,255,255,.55);font-size:14px;font-weight:600;transition:all .2s;margin-bottom:4px;background:none;border:none;width:100%;text-align:left;font-family:'Outfit',sans-serif;}
+.account-nav-item:hover{background:rgba(255,255,255,.07);color:white;}
+.account-nav-item.active{background:rgba(244,123,32,.2);color:var(--orange-light);}
+.account-nav-item span{font-size:18px;}
+.account-content{padding:48px 56px;background:var(--gray);}
+.account-panel{display:none;}
+.account-panel.active{display:block;}
+.account-panel h2{font-family:'Bebas Neue';font-size:48px;letter-spacing:2px;margin-bottom:6px;}
+.account-panel>p{color:var(--text-muted);margin-bottom:36px;}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:28px;}
+.info-card{background:white;border-radius:14px;padding:22px;border:1px solid var(--border);}
+.info-card-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+.info-card-val{font-size:16px;font-weight:700;color:var(--dark);}
+.order-table{background:white;border-radius:14px;overflow:hidden;border:1px solid var(--border);}
+.order-table-head{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:16px 22px;background:#F8F4F0;border-bottom:1px solid var(--border);}
+.order-table-head span{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);}
+.order-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:16px 22px;border-bottom:1px solid var(--border);align-items:center;transition:background .2s;}
+.order-row:last-child{border-bottom:none;}
+.order-row:hover{background:#FFF8F2;}
+.order-row span{font-size:14px;}
+.status-pill{padding:4px 12px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:1px;}
+.status-delivered{background:#D1FAE5;color:#065F46;}
+.status-processing{background:#FEF3C7;color:#92400E;}
+.sign-out-btn{display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:10px;cursor:none;color:#FF6B6B;font-size:14px;font-weight:600;background:rgba(255,107,107,.1);border:none;width:100%;text-align:left;font-family:'Outfit',sans-serif;margin-top:auto;transition:background .2s;}
+.sign-out-btn:hover{background:rgba(255,107,107,.2);}
+
+/* ══════════════════════════════════════════
+   WELLNESS PAGE
+══════════════════════════════════════════ */
+.wellness-article-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:28px;}
+.article-card{background:white;border-radius:20px;overflow:hidden;border:1px solid var(--border);transition:transform .3s,box-shadow .3s;cursor:none;}
+.article-card:hover{transform:translateY(-6px);box-shadow:0 20px 50px rgba(0,0,0,.1);}
+.article-img{height:200px;overflow:hidden;}
+.article-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.article-card:hover .article-img img{transform:scale(1.06);}
+.article-body{padding:26px;}
+.article-tag{display:inline-block;background:#FFF5ED;color:var(--orange);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:12px;}
+.article-body h3{font-weight:700;font-size:18px;line-height:1.35;margin-bottom:10px;}
+.article-body p{font-size:13px;color:var(--text-muted);line-height:1.65;}
+.article-meta{display:flex;align-items:center;gap:10px;margin-top:18px;font-size:12px;color:#B0A098;}
+
+/* ══════════════════════════════════════════
+   ANIMATIONS & SCROLL REVEAL
+══════════════════════════════════════════ */
+@keyframes fup{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fin{from{opacity:0;}to{opacity:1;}}
+.rv{opacity:0;transform:translateY(40px);transition:opacity .75s,transform .75s;}
+.rvl{opacity:0;transform:translateX(-40px);transition:opacity .75s,transform .75s;}
+.rvr{opacity:0;transform:translateX(40px);transition:opacity .75s,transform .75s;}
+.rv.on,.rvl.on,.rvr.on{opacity:1;transform:none;}
+.stag>*{opacity:0;transform:translateY(28px);transition:opacity .6s,transform .6s;}
+.stag.on>*:nth-child(1){opacity:1;transform:none;transition-delay:0s;}
+.stag.on>*:nth-child(2){opacity:1;transform:none;transition-delay:.12s;}
+.stag.on>*:nth-child(3){opacity:1;transform:none;transition-delay:.24s;}
+.stag.on>*:nth-child(4){opacity:1;transform:none;transition-delay:.36s;}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:900px){
+  nav{padding:16px 20px;}.nav-center{display:none;}
+  .hero-inner{flex-direction:column;padding:0 24px;justify-content:center;text-align:center;}.hero-right{display:none;}
+  #feat-sec{grid-template-columns:1fr;}.fc-content{padding:48px 28px;}
+  .sec-header,.cwrap{padding:0 24px;}
+  .wg,.rg{grid-template-columns:1fr;}
+  #wellness-sec,#reviews-sec,#partners-sec{padding:80px 24px;}
+  footer{padding:60px 24px 36px;}.fg{grid-template-columns:1fr 1fr;}
+  .kov{padding:0 32px;}
+  .billing-layout{grid-template-columns:1fr;padding:24px;padding-top:90px;}
+  .plan-cards{grid-template-columns:1fr;}
+  .account-layout{grid-template-columns:1fr;}
+  .page-body,.page-hero{padding:40px 24px;}.page-hero{padding-top:100px;}
+  .info-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curR"></div>
+
+<!-- ══════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════ -->
+<nav id="mainNav">
+  <a href="#" class="logo" onclick="showPage('home');return false;">
+    <div class="logo-icon">
+      <img src="assets/logo/logo-icon.png" alt="LV" onerror="this.style.display='none'"/>
+      <span>LV</span>
+    </div>
+    <span class="logo-name">Liquid Vitality.</span>
+  </a>
+  <ul class="nav-center">
+    <li><a href="#" onclick="showPage('home');return false;">Home</a></li>
+    <li><a href="#" onclick="showPage('products');return false;">Products</a></li>
+    <li><a href="#" onclick="showPage('wellness');return false;">Wellness</a></li>
+    <li><a href="#" onclick="scrollToReviews();return false;">Reviews</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="cart-btn-wrap">
+      <button class="btn-nav btn-nav-ghost" onclick="openCart()" id="cartNavBtn">🛒 Cart</button>
+      <div class="cart-badge" id="cartBadge">0</div>
+    </div>
+    <div id="navGuest">
+      <button class="btn-nav btn-nav-ghost" onclick="openModal('signin')">Sign In</button>
+      <button class="btn-nav btn-nav-solid" onclick="openModal('signup')">Sign Up</button>
+    </div>
+    <div id="navUser" style="display:none;">
+      <div class="user-pill" onclick="showPage('account')" style="cursor:none;">
+        <div class="user-avatar" id="navAvatar">U</div>
+        <span class="user-name-nav" id="navUserName">User</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HOME PAGE
+══════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section id="hero-section">
+    <div class="hero-bg"></div>
+    <div class="hero-bg-img">
+      <img src="assets/hero/hero-bg.jpg" alt="" onerror="this.style.display='none'"/>
+    </div>
+    <div class="pts" id="pts"></div>
+    <div class="hero-inner">
+      <div class="hero-left">
+        <p class="hero-eyebrow">Premium Cold-Pressed Juices</p>
+        <h1 class="hero-title">Nature's<br>Purest.</h1>
+        <p class="hero-sub">Every drop tells a story of freshness, hand-picked from the finest orchards at peak ripeness.</p>
+        <div class="hero-ctas">
+          <button class="btn-hero-p" onclick="showPage('products')">Shop Now</button>
+          <button class="btn-hero-g" onclick="document.getElementById('fs1').scrollIntoView({behavior:'smooth'})">Explore</button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-bottle-wrap">
+          <img class="bottle-img" src="assets/hero/hero-bottle.png" alt="Juice Bottle"
+            onerror="this.src='https://images.unsplash.com/photo-1600718374662-0483d2b9da44?w=600&auto=format&fit=crop&q=85'"/>
+          <div class="htag ht1">🍊 Cold Pressed</div>
+          <div class="htag ht2">✨ No Preservatives</div>
+          <div class="htag ht3">🌿 100% Natural</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span class="hs-lbl">Scroll to Explore</span>
+      <div class="hs-bar"></div>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker"><div class="ticker-t" id="tk"></div></div>
+
+  <!-- CANVAS FRAME SCROLL 1 -->
+  <section id="fs1">
+    <div class="fsticky">
+      <canvas id="fc1"></canvas>
+      <div class="foverlay">
+        <div class="ftxt">
+          <h2 id="fh1">Vitamin-Packed<br>Refreshment</h2>
+          <p id="fp1">A natural energy boost that revitalizes your body from the inside out.</p>
+        </div>
+      </div>
+      <div class="fprogress">
+        <span class="fplbl" id="fplbl">1 / 5</span>
+        <div class="fpt"><div class="fpf" id="fpf1"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURE SPLIT -->
+  <section id="feat-sec">
+    <div class="fi rvl">
+      <img src="assets/sections/feature-split.jpg" alt="Orange splash"
+        onerror="this.src='https://images.unsplash.com/photo-1622597467836-f3e77f89c26f?w=900&auto=format&fit=crop&q=85'"/>
+    </div>
+    <div class="fc-content rvr">
+      <div class="pill-tag">★ Our Promise</div>
+      <h2>Crafted With<br>Pure Passion</h2>
+      <p>Every bottle begins in sun-drenched orchards, selected at peak ripeness to deliver maximum nutrition and uncompromising flavour.</p>
+      <button class="btn-dark" onclick="showPage('products')">Explore Products →</button>
+      <div class="stats-row stag">
+        <div><div class="sn">100%</div><div class="sl">Natural</div></div>
+        <div><div class="sn">12+</div><div class="sl">Flavours</div></div>
+        <div><div class="sn">50K+</div><div class="sl">Customers</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS PREVIEW -->
+  <section id="products-sec">
+    <div class="sec-header rv">
+      <div><p class="sec-lbl">Our Collection</p><h2>Our Products</h2></div>
+      <div class="ctrls">
+        <button class="cbtn" id="pB">←</button>
+        <button class="cbtn" id="nB">→</button>
+      </div>
+    </div>
+    <div class="cwrap" id="cw">
+      <div class="cinner" id="ci" id="carousel-inner">
+        <div class="pcard" data-id="1" data-name="Wild Cherry" data-price="6.99">
+          <div class="pimg"><img src="assets/products/cherry.jpg" alt="Cherry" onerror="this.src='https://images.unsplash.com/photo-1559181567-c3190ca9d3c0?w=500&auto=format&fit=crop&q=85'"/><span class="pbadge">Bestseller</span></div>
+          <div class="pbody"><div class="pname">Wild Cherry</div><div class="pdesc">Antioxidant-rich cherry blend, naturally sweet</div><div class="pfoot"><span class="pprice">$6.99</span><button class="abtn" onclick="addToCart(1,'Wild Cherry',6.99,'assets/products/cherry.jpg')">+</button></div></div>
+        </div>
+        <div class="pcard" data-id="2" data-name="Vibrant Blueberry" data-price="7.49">
+          <div class="pimg"><img src="assets/products/blueberry.jpg" alt="Blueberry" onerror="this.src='https://images.unsplash.com/photo-1606787503047-8f8b33003e7d?w=500&auto=format&fit=crop&q=85'"/></div>
+          <div class="pbody"><div class="pname">Vibrant Blueberry</div><div class="pdesc">Brain-boosting cold-pressed daily blend</div><div class="pfoot"><span class="pprice">$7.49</span><button class="abtn" onclick="addToCart(2,'Vibrant Blueberry',7.49,'assets/products/blueberry.jpg')">+</button></div></div>
+        </div>
+        <div class="pcard" data-id="3" data-name="Pure Strawberry" data-price="6.49">
+          <div class="pimg"><img src="assets/products/strawberry.jpg" alt="Strawberry" onerror="this.src='https://images.unsplash.com/photo-1587049332298-1c42e83937a7?w=500&auto=format&fit=crop&q=85'"/><span class="pbadge">New</span></div>
+          <div class="pbody"><div class="pname">Pure Strawberry</div><div class="pdesc">Sun-ripened strawberries, vitamin C powerhouse</div><div class="pfoot"><span class="pprice">$6.49</span><button class="abtn" onclick="addToCart(3,'Pure Strawberry',6.49,'assets/products/strawberry.jpg')">+</button></div></div>
+        </div>
+        <div class="pcard" data-id="4" data-name="Green Refresh" data-price="7.99">
+          <div class="pimg"><img src="assets/products/green.jpg" alt="Green" onerror="this.src='https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=500&auto=format&fit=crop&q=85'"/></div>
+          <div class="pbody"><div class="pname">Green Refresh</div><div class="pdesc">Kale, cucumber & apple detox blend</div><div class="pfoot"><span class="pprice">$7.99</span><button class="abtn" onclick="addToCart(4,'Green Refresh',7.99,'assets/products/green.jpg')">+</button></div></div>
+        </div>
+        <div class="pcard" data-id="5" data-name="Sunrise Orange" data-price="5.99">
+          <div class="pimg"><img src="assets/products/orange.jpg" alt="Orange" onerror="this.src='https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=500&auto=format&fit=crop&q=85'"/></div>
+          <div class="pbody"><div class="pname">Sunrise Orange</div><div class="pdesc">Classic Valencia orange, immune-boosting</div><div class="pfoot"><span class="pprice">$5.99</span><button class="abtn" onclick="addToCart(5,'Sunrise Orange',5.99,'assets/products/orange.jpg')">+</button></div></div>
+        </div>
+        <div class="pcard" data-id="6" data-name="Mango Paradise" data-price="8.49">
+          <div class="pimg"><img src="assets/products/mango.jpg" alt="Mango" onerror="this.src='https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=500&auto=format&fit=crop&q=85'"/><span class="pbadge">Tropical</span></div>
+          <div class="pbody"><div class="pname">Mango Paradise</div><div class="pdesc">Alphonso mango, turmeric & ginger infusion</div><div class="pfoot"><span class="pprice">$8.49</span><button class="abtn" onclick="addToCart(6,'Mango Paradise',8.49,'assets/products/mango.jpg')">+</button></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KIWI BANNER -->
+  <section id="kiwi-sec">
+    <img src="assets/sections/kiwi-banner.jpg" alt="Kiwi"
+      onerror="this.src='https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=1600&auto=format&fit=crop&q=85'"/>
+    <div class="kov"><div class="rvl"><h2>The Craft<br>Juice</h2><p>Artisan blends crafted with passion and precision for those who demand the very best.</p></div></div>
+  </section>
+
+  <!-- CANVAS 2 GREEN -->
+  <section id="fs2">
+    <div class="fsticky2">
+      <canvas id="fc2"></canvas>
+      <div class="f2txt">
+        <h2>The Craft<br>Kiwi Juice</h2>
+        <p>A masterpiece of freshness, passion and precision in every single drop.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WELLNESS SECTION -->
+  <section id="wellness-sec">
+    <div class="sh rv"><p class="sec-lbl">Live Better</p><h2>Wellness Benefits</h2></div>
+    <div class="wg stag">
+      <div class="wcard"><div class="wcimg"><img src="assets/wellness/vitamins.jpg" alt="Vitamins" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&auto=format&fit=crop&q=80'"/></div><div class="wcb"><h3>Rich in Vitamins</h3><p>Packed with essential vitamins A, B, C and E supporting your immune system every day.</p><a href="#" class="wl" onclick="showPage('wellness');return false;">Learn More →</a></div></div>
+      <div class="wcard"><div class="wcimg"><img src="assets/wellness/energy.jpg" alt="Energy" onerror="this.src='https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop&q=80'"/></div><div class="wcb"><h3>Natural Energy</h3><p>No artificial stimulants — pure fruit sugars deliver sustained energy all day long.</p><a href="#" class="wl" onclick="showPage('wellness');return false;">Learn More →</a></div></div>
+      <div class="wcard"><div class="wcimg"><img src="assets/wellness/antioxidants.jpg" alt="Antioxidants" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80'"/></div><div class="wcb"><h3>Antioxidant Power</h3><p>High-potency antioxidants fight free radicals and keep your cells vibrant.</p><a href="#" class="wl" onclick="showPage('wellness');return false;">Learn More →</a></div></div>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section id="reviews-sec">
+    <p class="sec-lbl rv">Customer Love</p>
+    <h2 class="rv" style="font-family:'Bebas Neue';font-size:clamp(48px,6vw,80px);color:white;letter-spacing:2px;margin-bottom:60px;">What People<br>Are Saying</h2>
+    <div class="rg stag">
+      <div class="rcard"><div class="rstars">★★★★★</div><p class="rtxt">"I switched to Liquid Vitality six months ago and have never felt better. My skin is glowing and my energy levels are through the roof!"</p><div class="rauth"><div class="ravt"><img src="assets/avatars/sarah.jpg" onerror="this.src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&auto=format&fit=crop&q=80'" alt="Sarah"/></div><div><div class="rname">Sarah Mitchell</div><div class="rrole">Fitness Coach, New York</div></div></div></div>
+      <div class="rcard"><div class="rstars">★★★★★</div><p class="rtxt">"The Wild Cherry is absolutely incredible. You can taste the difference — real fruit, real quality, nothing artificial."</p><div class="rauth"><div class="ravt"><img src="assets/avatars/james.jpg" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80'" alt="James"/></div><div><div class="rname">James Rodriguez</div><div class="rrole">Chef, Los Angeles</div></div></div></div>
+      <div class="rcard"><div class="rstars">★★★★★</div><p class="rtxt">"I order a case every week for my family. My kids love Mango Paradise and it's the one healthy habit they actually ask for!"</p><div class="rauth"><div class="ravt"><img src="assets/avatars/emily.jpg" onerror="this.src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&auto=format&fit=crop&q=80'" alt="Emily"/></div><div><div class="rname">Emily Chen</div><div class="rrole">Mother of 3, Chicago</div></div></div></div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section id="partners-sec">
+    <div class="pbox rv"><p class="plbl">Trusted By Leading Wellness Brands</p><div class="plgs"><span class="plg">WHOLESOME CO</span><span class="plg">VITAMARKET</span><span class="plg">GREENFRESH</span><span class="plg">EATWELL</span><span class="plg">NATURA HUB</span></div></div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="fg">
+      <div class="fbrand">
+        <div class="logo" style="pointer-events:none;"><div class="logo-icon" style="background:var(--orange);color:white;">LV</div><span class="logo-name" style="color:white;">Liquid Vitality.</span></div>
+        <p>Premium cold-pressed juices made from the finest fruits. Nourish your body, elevate your life.</p>
+      </div>
+      <div class="fcol"><h4>Products</h4><ul><li><button onclick="showPage('products')">Wild Cherry</button></li><li><button onclick="showPage('products')">Vibrant Blueberry</button></li><li><button onclick="showPage('products')">Pure Strawberry</button></li><li><button onclick="showPage('products')">Green Refresh</button></li><li><button onclick="showPage('products')">Mango Paradise</button></li></ul></div>
+      <div class="fcol"><h4>Company</h4><ul><li><a href="#">Our Story</a></li><li><button onclick="showPage('wellness')">Wellness Blog</button></li><li><a href="#">Sustainability</a></li><li><a href="#">Careers</a></li></ul></div>
+      <div class="fcol"><h4>Account</h4><ul><li><button onclick="openModal('signin')">Sign In</button></li><li><button onclick="openModal('signup')">Create Account</button></li><li><button onclick="showPage('billing')">Subscription Plans</button></li><li><button onclick="showPage('account')">My Account</button></li></ul></div>
+    </div>
+    <div class="fb"><p class="fcopy">© 2026 Liquid Vitality. All rights reserved.</p><div class="fsocs"><a href="#" class="fsoc">IG</a><a href="#" class="fsoc">TW</a><a href="#" class="fsoc">FB</a><a href="#" class="fsoc">YT</a></div></div>
+  </footer>
+</div><!-- end home page -->
+
+<!-- ══════════════════════════════════════════
+     PRODUCTS PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-products">
+  <div class="page-hero">
+    <h1>Our <span>Products</span></h1>
+    <p>12 premium cold-pressed juice blends, crafted from the world's finest fruits. Find your perfect flavour.</p>
+  </div>
+  <div class="page-body">
+    <p class="sec-lbl" style="margin-bottom:28px;">All Flavours — 12 Products</p>
+    <div class="products-full-grid">
+      <div class="pcard"><div class="pimg"><img src="assets/products/cherry.jpg" onerror="this.src='https://images.unsplash.com/photo-1559181567-c3190ca9d3c0?w=500&auto=format&fit=crop&q=85'" alt="Cherry"/><span class="pbadge">Bestseller</span></div><div class="pbody"><div class="pname">Wild Cherry</div><div class="pdesc">Antioxidant-rich cherry blend, naturally sweet and deeply refreshing</div><div class="pfoot"><span class="pprice">$6.99</span><button class="abtn" onclick="addToCart(1,'Wild Cherry',6.99,'assets/products/cherry.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/blueberry.jpg" onerror="this.src='https://images.unsplash.com/photo-1606787503047-8f8b33003e7d?w=500&auto=format&fit=crop&q=85'" alt="Blueberry"/></div><div class="pbody"><div class="pname">Vibrant Blueberry</div><div class="pdesc">Brain-boosting blueberries, cold-pressed daily for maximum freshness</div><div class="pfoot"><span class="pprice">$7.49</span><button class="abtn" onclick="addToCart(2,'Vibrant Blueberry',7.49,'assets/products/blueberry.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/strawberry.jpg" onerror="this.src='https://images.unsplash.com/photo-1587049332298-1c42e83937a7?w=500&auto=format&fit=crop&q=85'" alt="Strawberry"/><span class="pbadge">New</span></div><div class="pbody"><div class="pname">Pure Strawberry</div><div class="pdesc">Sun-ripened strawberries, vitamin C powerhouse in every sip</div><div class="pfoot"><span class="pprice">$6.49</span><button class="abtn" onclick="addToCart(3,'Pure Strawberry',6.49,'assets/products/strawberry.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/green.jpg" onerror="this.src='https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=500&auto=format&fit=crop&q=85'" alt="Green"/></div><div class="pbody"><div class="pname">Green Refresh</div><div class="pdesc">Kale, cucumber & apple detox blend for daily cleansing</div><div class="pfoot"><span class="pprice">$7.99</span><button class="abtn" onclick="addToCart(4,'Green Refresh',7.99,'assets/products/green.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/orange.jpg" onerror="this.src='https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=500&auto=format&fit=crop&q=85'" alt="Orange"/></div><div class="pbody"><div class="pname">Sunrise Orange</div><div class="pdesc">Classic Valencia orange, your immune-boosting morning ritual</div><div class="pfoot"><span class="pprice">$5.99</span><button class="abtn" onclick="addToCart(5,'Sunrise Orange',5.99,'assets/products/orange.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/mango.jpg" onerror="this.src='https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=500&auto=format&fit=crop&q=85'" alt="Mango"/><span class="pbadge">Tropical</span></div><div class="pbody"><div class="pname">Mango Paradise</div><div class="pdesc">Alphonso mango, turmeric & ginger — a tropical indulgence</div><div class="pfoot"><span class="pprice">$8.49</span><button class="abtn" onclick="addToCart(6,'Mango Paradise',8.49,'assets/products/mango.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/cherry.jpg" onerror="this.src='https://images.unsplash.com/photo-1559181567-c3190ca9d3c0?w=500&auto=format&fit=crop&q=85'" alt="Pomegranate"/><span class="pbadge">Limited</span></div><div class="pbody"><div class="pname">Pomegranate Burst</div><div class="pdesc">Deep ruby pomegranate with a hint of rose water</div><div class="pfoot"><span class="pprice">$9.49</span><button class="abtn" onclick="addToCart(7,'Pomegranate Burst',9.49,'assets/products/cherry.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/orange.jpg" onerror="this.src='https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=500&auto=format&fit=crop&q=85'" alt="Grapefruit"/></div><div class="pbody"><div class="pname">Ruby Grapefruit</div><div class="pdesc">Tangy pink grapefruit — bold, refreshing, metabolism-firing</div><div class="pfoot"><span class="pprice">$6.99</span><button class="abtn" onclick="addToCart(8,'Ruby Grapefruit',6.99,'assets/products/orange.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/green.jpg" onerror="this.src='https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=500&auto=format&fit=crop&q=85'" alt="Spirulina"/></div><div class="pbody"><div class="pname">Spirulina Surge</div><div class="pdesc">Spirulina, spinach & lime — the ultimate detox blend</div><div class="pfoot"><span class="pprice">$10.99</span><button class="abtn" onclick="addToCart(9,'Spirulina Surge',10.99,'assets/products/green.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/blueberry.jpg" onerror="this.src='https://images.unsplash.com/photo-1606787503047-8f8b33003e7d?w=500&auto=format&fit=crop&q=85'" alt="Acai"/><span class="pbadge">Super</span></div><div class="pbody"><div class="pname">Açaí Power</div><div class="pdesc">Amazonian açaí berries with activated charcoal</div><div class="pfoot"><span class="pprice">$11.49</span><button class="abtn" onclick="addToCart(10,'Açaí Power',11.49,'assets/products/blueberry.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/mango.jpg" onerror="this.src='https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=500&auto=format&fit=crop&q=85'" alt="Pineapple"/></div><div class="pbody"><div class="pname">Pineapple Zen</div><div class="pdesc">Pineapple, coconut water & mint for tropical hydration</div><div class="pfoot"><span class="pprice">$7.99</span><button class="abtn" onclick="addToCart(11,'Pineapple Zen',7.99,'assets/products/mango.jpg')">+</button></div></div></div>
+      <div class="pcard"><div class="pimg"><img src="assets/products/strawberry.jpg" onerror="this.src='https://images.unsplash.com/photo-1587049332298-1c42e83937a7?w=500&auto=format&fit=crop&q=85'" alt="Watermelon"/></div><div class="pbody"><div class="pname">Watermelon Wave</div><div class="pdesc">Summer watermelon & basil — light, sweet, electrolyte-rich</div><div class="pfoot"><span class="pprice">$6.49</span><button class="abtn" onclick="addToCart(12,'Watermelon Wave',6.49,'assets/products/strawberry.jpg')">+</button></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     WELLNESS PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-wellness">
+  <div class="page-hero" style="background:linear-gradient(135deg,#1A4008,#2D6B1A);">
+    <h1>Wellness <span style="color:#A8D840;">Blog</span></h1>
+    <p>Science-backed articles on nutrition, detox and living your healthiest life through the power of real fruit.</p>
+  </div>
+  <div class="page-body">
+    <p class="sec-lbl" style="margin-bottom:28px;">Latest Articles</p>
+    <div class="wellness-article-grid">
+      <div class="article-card"><div class="article-img"><img src="assets/wellness/vitamins.jpg" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&auto=format&fit=crop&q=80'" alt="Vitamins"/></div><div class="article-body"><span class="article-tag">Nutrition</span><h3>Why Cold-Pressed Juice Retains 5x More Vitamins</h3><p>Heat destroys enzymes and vitamins. Learn how our HPP process keeps every nutrient intact from orchard to bottle.</p><div class="article-meta"><span>🕐 5 min read</span><span>·</span><span>Jan 15, 2026</span></div></div></div>
+      <div class="article-card"><div class="article-img"><img src="assets/wellness/energy.jpg" onerror="this.src='https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop&q=80'" alt="Energy"/></div><div class="article-body"><span class="article-tag">Energy</span><h3>The Science Behind Natural Energy Without Caffeine</h3><p>Fruit fructose paired with B-vitamins creates a smooth, sustained energy release that won't crash after 2 hours.</p><div class="article-meta"><span>🕐 7 min read</span><span>·</span><span>Feb 2, 2026</span></div></div></div>
+      <div class="article-card"><div class="article-img"><img src="assets/wellness/antioxidants.jpg" onerror="this.src='https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80'" alt="Antioxidants"/></div><div class="article-body"><span class="article-tag">Anti-aging</span><h3>Antioxidants Explained: What They Do and Why You Need Them</h3><p>Free radicals age your cells. Antioxidants fight back. Here's the complete guide to polyphenols, flavonoids and more.</p><div class="article-meta"><span>🕐 9 min read</span><span>·</span><span>Feb 18, 2026</span></div></div></div>
+      <div class="article-card"><div class="article-img"><img src="assets/sections/feature-split.jpg" onerror="this.src='https://images.unsplash.com/photo-1622597467836-f3e77f89c26f?w=600&auto=format&fit=crop&q=80'" alt="Detox"/></div><div class="article-body"><span class="article-tag">Detox</span><h3>7-Day Green Juice Cleanse: A Real User's Experience</h3><p>One of our customers documented their week-long green cleanse. The results were surprising — and not what they expected.</p><div class="article-meta"><span>🕐 12 min read</span><span>·</span><span>Mar 5, 2026</span></div></div></div>
+      <div class="article-card"><div class="article-img"><img src="assets/wellness/vitamins.jpg" onerror="this.src='https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&auto=format&fit=crop&q=80'" alt="Gut"/></div><div class="article-body"><span class="article-tag">Gut Health</span><h3>How Daily Juice Improves Your Gut Microbiome</h3><p>Prebiotics in fruits feed the good bacteria in your gut. Learn which juices work best and when to drink them.</p><div class="article-meta"><span>🕐 6 min read</span><span>·</span><span>Mar 20, 2026</span></div></div></div>
+      <div class="article-card"><div class="article-img"><img src="assets/wellness/energy.jpg" onerror="this.src='https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=600&auto=format&fit=crop&q=80'" alt="Sleep"/></div><div class="article-body"><span class="article-tag">Sleep</span><h3>The Best Juice to Drink Before Bed for Better Sleep</h3><p>Tart cherry juice contains natural melatonin. Studies show it can increase sleep time by up to 90 minutes.</p><div class="article-meta"><span>🕐 4 min read</span><span>·</span><span>Apr 1, 2026</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     BILLING PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-billing">
+  <div class="billing-layout">
+    <div class="billing-left">
+      <h1>Choose Your Plan</h1>
+      <p>Subscribe and save up to 30% on every order. Cancel anytime.</p>
+
+      <div class="plan-cards">
+        <div class="plan-card" id="plan-starter" onclick="selectPlan('starter',19.99)">
+          <div class="plan-name">Starter</div>
+          <div class="plan-price">$19.99<span>/month</span></div>
+          <div class="plan-desc">Perfect for trying it out. 3 bottles delivered weekly.</div>
+          <ul class="plan-features">
+            <li>3 bottles per week</li><li>Choose any flavours</li><li>Free standard delivery</li><li>Cancel anytime</li>
+          </ul>
+        </div>
+        <div class="plan-card popular selected" id="plan-vitality" onclick="selectPlan('vitality',34.99)">
+          <div class="plan-name">Vitality ⭐</div>
+          <div class="plan-price">$34.99<span>/month</span></div>
+          <div class="plan-desc">Most popular. 6 bottles per week with priority delivery.</div>
+          <ul class="plan-features">
+            <li>6 bottles per week</li><li>Priority selection</li><li>Free express delivery</li><li>Monthly gift included</li><li>Cancel anytime</li>
+          </ul>
+        </div>
+        <div class="plan-card" id="plan-elite" onclick="selectPlan('elite',54.99)">
+          <div class="plan-name">Elite</div>
+          <div class="plan-price">$54.99<span>/month</span></div>
+          <div class="plan-desc">The full experience. Unlimited variety, daily delivery.</div>
+          <ul class="plan-features">
+            <li>12 bottles per week</li><li>Early access to new flavours</li><li>Free same-day delivery</li><li>Dedicated account manager</li><li>Cancel anytime</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="billing-section">
+        <h3>💳 Payment Details</h3>
+        <div class="card-icons">
+          <div class="card-icon">VISA</div>
+          <div class="card-icon">MC</div>
+          <div class="card-icon">AMEX</div>
+          <div class="card-icon">PYPL</div>
+        </div>
+        <div class="form-group"><label>Cardholder Name</label><input class="form-input" type="text" placeholder="John Smith"/></div>
+        <div class="form-group"><label>Card Number</label><input class="form-input" type="text" placeholder="1234 5678 9012 3456" maxlength="19"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Expiry Date</label><input class="form-input" type="text" placeholder="MM / YY"/></div>
+          <div class="form-group"><label>CVV</label><input class="form-input" type="text" placeholder="•••" maxlength="4"/></div>
+        </div>
+      </div>
+
+      <div class="billing-section">
+        <h3>📦 Delivery Address</h3>
+        <div class="form-group"><label>Full Name</label><input class="form-input" type="text" placeholder="Your full name"/></div>
+        <div class="form-group"><label>Address Line 1</label><input class="form-input" type="text" placeholder="Street address"/></div>
+        <div class="form-group"><label>Address Line 2</label><input class="form-input" type="text" placeholder="Apt, suite, unit (optional)"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>City</label><input class="form-input" type="text" placeholder="City"/></div>
+          <div class="form-group"><label>ZIP / Postcode</label><input class="form-input" type="text" placeholder="ZIP"/></div>
+        </div>
+        <div class="form-group"><label>Country</label>
+          <select class="form-input"><option>United States</option><option>United Kingdom</option><option>Canada</option><option>Australia</option></select>
+        </div>
+      </div>
+
+      <button class="btn-full" style="font-size:15px;padding:18px;" onclick="completeBillingCheckout()">
+        🔒 Start My Subscription
+      </button>
+      <p style="font-size:12px;color:#B0A098;text-align:center;margin-top:12px;">Secure 256-bit SSL encryption. Cancel anytime. No hidden fees.</p>
+    </div>
+
+    <div>
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-item"><span>Selected Plan</span><span id="summaryPlan">Vitality Plan</span></div>
+        <div class="summary-item"><span>Bottles per week</span><span>6 bottles</span></div>
+        <div class="summary-item"><span>Delivery</span><span style="color:var(--green);font-weight:700;">FREE</span></div>
+        <div class="summary-item"><span>First Month Discount</span><span style="color:var(--green);">−$5.00</span></div>
+        <div class="summary-total">
+          <span>Total Today</span>
+          <span class="summary-total-price" id="summaryTotal">$29.99</span>
+        </div>
+        <button class="btn-checkout" onclick="completeBillingCheckout()">Complete Order →</button>
+        <p style="font-size:11px;color:#B0A098;text-align:center;margin-top:14px;">Then $34.99/month. Cancel anytime.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ACCOUNT PAGE
+══════════════════════════════════════════ -->
+<div class="page" id="page-account">
+  <div class="account-layout">
+    <aside class="account-sidebar">
+      <div class="user-info">
+        <div class="user-big-avatar" id="accountAvatar">U</div>
+        <div class="account-username" id="accountName">User Name</div>
+        <div class="account-email" id="accountEmail">user@email.com</div>
+      </div>
+      <button class="account-nav-item active" onclick="switchAccountTab('overview',this)"><span>📊</span> Overview</button>
+      <button class="account-nav-item" onclick="switchAccountTab('orders',this)"><span>📦</span> My Orders</button>
+      <button class="account-nav-item" onclick="switchAccountTab('subscription',this)"><span>🔄</span> Subscription</button>
+      <button class="account-nav-item" onclick="switchAccountTab('settings',this)"><span>⚙️</span> Settings</button>
+      <div style="margin-top:auto;padding-top:32px;">
+        <button class="sign-out-btn" onclick="signOut()"><span>🚪</span> Sign Out</button>
+      </div>
+    </aside>
+
+    <div class="account-content">
+      <!-- OVERVIEW -->
+      <div class="account-panel active" id="panel-overview">
+        <h2>Overview</h2>
+        <p>Welcome back! Here's a snapshot of your account.</p>
+        <div class="info-grid">
+          <div class="info-card"><div class="info-card-label">Current Plan</div><div class="info-card-val" id="acPlan">No Active Plan</div></div>
+          <div class="info-card"><div class="info-card-label">Total Orders</div><div class="info-card-val">3 Orders</div></div>
+          <div class="info-card"><div class="info-card-label">Bottles Ordered</div><div class="info-card-val">18 Bottles</div></div>
+          <div class="info-card"><div class="info-card-label">Member Since</div><div class="info-card-val">April 2026</div></div>
+        </div>
+        <div style="margin-top:24px;">
+          <button class="btn-dark" onclick="showPage('billing')">Upgrade Your Plan →</button>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+      <div class="account-panel" id="panel-orders">
+        <h2>My Orders</h2>
+        <p>Your full order history is shown below.</p>
+        <div class="order-table">
+          <div class="order-table-head"><span>Order</span><span>Date</span><span>Total</span><span>Status</span></div>
+          <div class="order-row"><span>#LV-2026-001</span><span>Apr 2, 2026</span><span>$34.99</span><span class="status-pill status-delivered">Delivered</span></div>
+          <div class="order-row"><span>#LV-2026-002</span><span>Mar 26, 2026</span><span>$34.99</span><span class="status-pill status-delivered">Delivered</span></div>
+          <div class="order-row"><span>#LV-2026-003</span><span>Apr 6, 2026</span><span>$34.99</span><span class="status-pill status-processing">Processing</span></div>
+        </div>
+      </div>
+
+      <!-- SUBSCRIPTION -->
+      <div class="account-panel" id="panel-subscription">
+        <h2>Subscription</h2>
+        <p>Manage your active subscription plan.</p>
+        <div class="billing-section" style="max-width:480px;">
+          <h3>📋 Current Plan</h3>
+          <div class="info-card" style="margin-bottom:16px;"><div class="info-card-label">Active Plan</div><div class="info-card-val" id="subPlanName">No Plan Active</div></div>
+          <div class="info-card" style="margin-bottom:20px;"><div class="info-card-label">Next Billing Date</div><div class="info-card-val">May 7, 2026</div></div>
+          <div style="display:flex;gap:12px;">
+            <button class="btn-dark" onclick="showPage('billing')">Change Plan</button>
+            <button style="padding:14px 24px;border:1.5px solid #E0D8D2;border-radius:12px;background:white;cursor:none;font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#8A7060;transition:all .2s;" onclick="showToast('⚠️ Subscription cancelled.','#E53E3E')">Cancel Plan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="account-panel" id="panel-settings">
+        <h2>Settings</h2>
+        <p>Update your personal information and preferences.</p>
+        <div class="billing-section" style="max-width:520px;">
+          <h3>👤 Personal Info</h3>
+          <div class="form-row">
+            <div class="form-group"><label>First Name</label><input class="form-input" type="text" id="settingsFirst" placeholder="First name"/></div>
+            <div class="form-group"><label>Last Name</label><input class="form-input" type="text" id="settingsLast" placeholder="Last name"/></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input class="form-input" type="email" id="settingsEmail" placeholder="your@email.com"/></div>
+          <button class="btn-full" onclick="saveSettings()">Save Changes</button>
+        </div>
+        <div class="billing-section" style="max-width:520px;margin-top:20px;">
+          <h3>🔐 Change Password</h3>
+          <div class="form-group"><label>Current Password</label><input class="form-input" type="password" placeholder="••••••••"/></div>
+          <div class="form-group"><label>New Password</label><input class="form-input" type="password" placeholder="••••••••"/></div>
+          <div class="form-group"><label>Confirm New Password</label><input class="form-input" type="password" placeholder="••••••••"/></div>
+          <button class="btn-full" onclick="showToast('🔐 Password updated successfully!','#276749')">Update Password</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SIGN IN MODAL
+══════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modal-signin">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Welcome Back</h2>
+      <button class="modal-close" onclick="closeModal('signin')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-sub">Sign in to your Liquid Vitality account to manage orders and subscriptions.</p>
+      <div class="social-auth">
+        <button class="btn-social" onclick="socialLogin('Google')">🌐 Google</button>
+        <button class="btn-social" onclick="socialLogin('Apple')">🍎 Apple</button>
+      </div>
+      <div class="divider"><span>or sign in with email</span></div>
+      <div class="form-group"><label>Email Address</label><input class="form-input" type="email" id="siEmail" placeholder="your@email.com"/></div>
+      <div class="form-group"><label>Password</label><input class="form-input" type="password" id="siPassword" placeholder="••••••••"/></div>
+      <p style="text-align:right;margin-top:-10px;margin-bottom:8px;"><a href="#" style="font-size:13px;color:var(--orange);font-weight:600;text-decoration:none;" onclick="showToast('📧 Reset link sent to your email!','#2B6CB0')">Forgot password?</a></p>
+      <button class="btn-full" onclick="signIn()">Sign In →</button>
+      <div class="modal-switch">Don't have an account? <a href="#" onclick="switchModal('signin','signup')">Create one</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SIGN UP MODAL
+══════════════════════════════════════════ -->
+<div class="modal-backdrop" id="modal-signup">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Create Account</h2>
+      <button class="modal-close" onclick="closeModal('signup')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-sub">Join thousands of Liquid Vitality members living their healthiest life.</p>
+      <div class="social-auth">
+        <button class="btn-social" onclick="socialLogin('Google')">🌐 Google</button>
+        <button class="btn-social" onclick="socialLogin('Apple')">🍎 Apple</button>
+      </div>
+      <div class="divider"><span>or create with email</span></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input class="form-input" type="text" id="suFirst" placeholder="First name"/></div>
+        <div class="form-group"><label>Last Name</label><input class="form-input" type="text" id="suLast" placeholder="Last name"/></div>
+      </div>
+      <div class="form-group"><label>Email Address</label><input class="form-input" type="email" id="suEmail" placeholder="your@email.com"/></div>
+      <div class="form-group"><label>Password</label><input class="form-input" type="password" id="suPassword" placeholder="Min 8 characters"/></div>
+      <button class="btn-full" onclick="signUp()">Create My Account →</button>
+      <div class="modal-switch">Already have an account? <a href="#" onclick="switchModal('signup','signin')">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     CART SIDEBAR
+══════════════════════════════════════════ -->
+<div class="cart-backdrop" id="cartBackdrop" onclick="closeCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-top">
+    <h3>🛒 Your Cart</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty"><div class="cart-empty-icon">🧃</div><p style="font-weight:600;color:#8A7060;">Your cart is empty</p><p style="font-size:13px;color:#B0A098;margin-top:4px;">Add some juices to get started!</p><button class="btn-dark" style="margin-top:16px;" onclick="closeCart();showPage('products')">Browse Products</button></div>
+  </div>
+  <div class="cart-bottom" id="cartBottom" style="display:none;">
+    <div class="cart-total"><span>Subtotal</span><span class="cart-total-price" id="cartTotalDisplay">$0.00</span></div>
+    <button class="btn-checkout" onclick="goToCheckout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✅</span>
+  <span id="toastMsg">Done!</span>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+// CURSOR
+// ════════════════════════════════════════════
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.addEventListener('mouseover',e=>{if(e.target.matches('a,button,.pcard,.wcard,.rcard,.plan-card,.article-card')){cur.style.width='18px';cur.style.height='18px';curR.style.width='54px';curR.style.height='54px';}else{cur.style.width='12px';cur.style.height='12px';curR.style.width='38px';curR.style.height='38px';}});
+
+// ════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════
+let currentUser = null;
+let cart = {};
+let activePlan = null;
+const PLANS = {starter:{name:'Starter Plan',price:19.99,first:14.99},vitality:{name:'Vitality Plan',price:34.99,first:29.99},elite:{name:'Elite Plan',price:54.99,first:49.99}};
+
+// ════════════════════════════════════════════
+// PAGE NAVIGATION
+// ════════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if(pg){ pg.classList.add('active'); window.scrollTo(0,0); }
+  // Scroll + init canvas if going home
+  if(id==='home'){setupReveal();initCanvases();}
+  // Update account info
+  if(id==='account' && currentUser){
+    document.getElementById('accountAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+    document.getElementById('accountName').textContent = currentUser.name;
+    document.getElementById('accountEmail').textContent = currentUser.email;
+    document.getElementById('acPlan').textContent = activePlan ? PLANS[activePlan].name : 'No Active Plan';
+    document.getElementById('subPlanName').textContent = activePlan ? PLANS[activePlan].name : 'No Plan Active';
+    document.getElementById('settingsFirst').value = currentUser.name.split(' ')[0]||'';
+    document.getElementById('settingsLast').value = currentUser.name.split(' ')[1]||'';
+    document.getElementById('settingsEmail').value = currentUser.email||'';
+  }
+  if(id==='account' && !currentUser){ openModal('signin'); return; }
+}
+function scrollToReviews(){showPage('home');setTimeout(()=>document.getElementById('reviews-sec').scrollIntoView({behavior:'smooth'}),100);}
+
+// ════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════
+function signIn(){
+  const email=document.getElementById('siEmail').value.trim();
+  const pass=document.getElementById('siPassword').value;
+  if(!email||!pass){showToast('⚠️ Please fill in all fields.','#E53E3E');return;}
+  if(pass.length<3){showToast('⚠️ Incorrect password.','#E53E3E');return;}
+  const name = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  loginUser({name,email});
+  closeModal('signin');
+  showToast('👋 Welcome back, '+name.split(' ')[0]+'!','#276749');
+}
+function signUp(){
+  const first=document.getElementById('suFirst').value.trim();
+  const last=document.getElementById('suLast').value.trim();
+  const email=document.getElementById('suEmail').value.trim();
+  const pass=document.getElementById('suPassword').value;
+  if(!first||!email||!pass){showToast('⚠️ Please fill in all required fields.','#E53E3E');return;}
+  if(pass.length<8){showToast('⚠️ Password must be at least 8 characters.','#E53E3E');return;}
+  const name = (first+' '+last).trim();
+  loginUser({name,email});
+  closeModal('signup');
+  showToast('🎉 Welcome to Liquid Vitality, '+first+'!','#276749');
+}
+function socialLogin(provider){
+  const name = provider==='Google'?'Google User':'Apple User';
+  const email = provider.toLowerCase()+'@user.com';
+  loginUser({name,email});
+  closeModal('signin');closeModal('signup');
+  showToast('✅ Signed in with '+provider+'!','#276749');
+}
+function loginUser(user){
+  currentUser=user;
+  document.getElementById('navGuest').style.display='none';
+  document.getElementById('navUser').style.display='flex';
+  document.getElementById('navAvatar').textContent=user.name.charAt(0).toUpperCase();
+  document.getElementById('navUserName').textContent=user.name.split(' ')[0];
+}
+function signOut(){
+  currentUser=null;activePlan=null;
+  document.getElementById('navGuest').style.display='flex';
+  document.getElementById('navUser').style.display='none';
+  showPage('home');
+  showToast('👋 You have been signed out.','#2B6CB0');
+}
+
+// ════════════════════════════════════════════
+// MODALS
+// ════════════════════════════════════════════
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id){
+  document.getElementById('modal-'+id).classList.remove('open');
+  document.body.style.overflow='';
+}
+function switchModal(from,to){closeModal(from);setTimeout(()=>openModal(to),200);}
+document.querySelectorAll('.modal-backdrop').forEach(bd=>{
+  bd.addEventListener('click',e=>{ if(e.target===bd) bd.classList.remove('open'); });
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') document.querySelectorAll('.modal-backdrop.open').forEach(m=>m.classList.remove('open')); });
+
+// ════════════════════════════════════════════
+// CART
+// ════════════════════════════════════════════
+function addToCart(id,name,price,img){
+  if(!cart[id]) cart[id]={id,name,price,img,qty:0};
+  cart[id].qty++;
+  renderCart();
+  showToast('🧃 '+name+' added to cart!','#276749');
+  // Animate the add button
+  event && event.target && animAddBtn(event.target);
+}
+function animAddBtn(btn){
+  const orig=btn.textContent;
+  btn.textContent='✓';btn.style.background='#2A7A30';
+  setTimeout(()=>{btn.textContent=orig;btn.style.background='';},1200);
+}
+function removeFromCart(id){delete cart[id];renderCart();}
+function changeQty(id,delta){
+  if(!cart[id])return;
+  cart[id].qty+=delta;
+  if(cart[id].qty<=0) delete cart[id];
+  renderCart();
+}
+function renderCart(){
+  const items=Object.values(cart);
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
+  const badge=document.getElementById('cartBadge');
+  const count=items.reduce((s,i)=>s+i.qty,0);
+  badge.textContent=count;
+  badge.classList.toggle('show',count>0);
+  const container=document.getElementById('cartItems');
+  const bottom=document.getElementById('cartBottom');
+  if(!items.length){
+    container.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🧃</div><p style="font-weight:600;color:#8A7060;">Your cart is empty</p><p style="font-size:13px;color:#B0A098;margin-top:4px;">Add some juices to get started!</p><button class="btn-dark" style="margin-top:16px;" onclick="closeCart();showPage(\'products\')">Browse Products</button></div>';
+    bottom.style.display='none';
+    return;
+  }
+  bottom.style.display='block';
+  document.getElementById('cartTotalDisplay').textContent='$'+total.toFixed(2);
+  container.innerHTML=items.map(item=>`
+    <div class="cart-item">
+      <div class="ci-img"><img src="${item.img}" onerror="this.src='https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=200&auto=format&fit=crop&q=70'" alt="${item.name}"/></div>
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-price">$${item.price.toFixed(2)}</div>
+        <div class="ci-qty">
+          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+        </div>
+      </div>
+      <button class="ci-remove" onclick="removeFromCart(${item.id})">✕</button>
+    </div>
+  `).join('');
+}
+function openCart(){document.getElementById('cartSidebar').classList.add('open');document.getElementById('cartBackdrop').classList.add('open');document.body.style.overflow='hidden';}
+function closeCart(){document.getElementById('cartSidebar').classList.remove('open');document.getElementById('cartBackdrop').classList.remove('open');document.body.style.overflow='';}
+function goToCheckout(){closeCart();if(!currentUser){openModal('signin');showToast('Please sign in to checkout.','#2B6CB0');}else{showPage('billing');}}
+
+// ════════════════════════════════════════════
+// BILLING
+// ════════════════════════════════════════════
+function selectPlan(id,price){
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('plan-'+id).classList.add('selected');
+  const plan=PLANS[id];
+  document.getElementById('summaryPlan').textContent=plan.name;
+  document.getElementById('summaryTotal').textContent='$'+plan.first.toFixed(2);
+}
+function completeBillingCheckout(){
+  if(!currentUser){openModal('signin');showToast('Please sign in first.','#2B6CB0');return;}
+  const selected=document.querySelector('.plan-card.selected');
+  const id=selected?selected.id.replace('plan-',''):'vitality';
+  activePlan=id;
+  cart={};renderCart();
+  showToast('🎉 Subscription activated! Welcome to '+PLANS[id].name,'#276749');
+  setTimeout(()=>showPage('account'),800);
+}
+
+// ════════════════════════════════════════════
+// ACCOUNT TABS
+// ════════════════════════════════════════════
+function switchAccountTab(id,btn){
+  document.querySelectorAll('.account-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.account-nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function saveSettings(){
+  const first=document.getElementById('settingsFirst').value.trim();
+  const last=document.getElementById('settingsLast').value.trim();
+  const email=document.getElementById('settingsEmail').value.trim();
+  if(!first||!email){showToast('⚠️ Name and email are required.','#E53E3E');return;}
+  if(currentUser){currentUser.name=(first+' '+last).trim();currentUser.email=email;loginUser(currentUser);}
+  showToast('✅ Settings saved successfully!','#276749');
+}
+
+// ════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════
+let toastTimer;
+function showToast(msg,color='#276749'){
+  const t=document.getElementById('toast');
+  const icon=msg.match(/^([\u{1F300}-\u{1FFFF}]|[\u2600-\u27FF])\s/u);
+  document.getElementById('toastIcon').textContent=icon?icon[1]:'✅';
+  document.getElementById('toastMsg').textContent=icon?msg.slice(icon[0].length):msg;
+  t.style.background=color;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ════════════════════════════════════════════
+// TICKER
+// ════════════════════════════════════════════
+const tk=document.getElementById('tk');
+const tickerItems=['🍊 Cold Pressed','🌿 100% Natural','✨ No Preservatives','🍇 Antioxidant Rich','💪 Vitamin Packed','🍋 Farm Fresh','🌱 Vegan Friendly','❄️ Never Pasteurised','🏆 Award Winning','🚚 Free Delivery'];
+[...tickerItems,...tickerItems].forEach(t=>{const d=document.createElement('div');d.className='ti';d.innerHTML=`<span class="tdot"></span>${t}`;tk.appendChild(d);});
+
+// ════════════════════════════════════════════
+// PARTICLES
+// ════════════════════════════════════════════
+const pts=document.getElementById('pts');
+for(let i=0;i<20;i++){const d=document.createElement('div');d.className='pt';const s=Math.random()*14+4;d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*10}s;opacity:${Math.random()*.25+.05};`;pts.appendChild(d);}
+
+// ════════════════════════════════════════════
+// NAVBAR SCROLL
+// ════════════════════════════════════════════
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').classList.toggle('sc',scrollY>60);
+  handleCanvasScroll();
+});
+
+// ════════════════════════════════════════════
+// CANVAS FRAME SCROLL — REAL IMAGES
+// Falls back to Unsplash if local assets missing
+// ════════════════════════════════════════════
+const c1=document.getElementById('fc1'),x1=c1.getContext('2d');
+const c2=document.getElementById('fc2'),x2=c2.getContext('2d');
+
+const ORANGE_IMGS=[
+  'assets/frames/orange/frame1.jpg',
+  'assets/frames/orange/frame2.jpg',
+  'assets/frames/orange/frame3.jpg',
+  'assets/frames/orange/frame4.jpg',
+  'assets/frames/orange/frame5.jpg',
+];
+const ORANGE_FALLBACK=[
+  'https://images.unsplash.com/photo-1600718374662-0483d2b9da44?w=1400&auto=format&fit=crop&q=90',
+  'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=1400&auto=format&fit=crop&q=90',
+  'https://images.unsplash.com/photo-1622597467836-f3e77f89c26f?w=1400&auto=format&fit=crop&q=90',
+  'https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=1400&auto=format&fit=crop&q=90',
+  'https://images.unsplash.com/photo-1534353436294-0dbd4bdac845?w=1400&auto=format&fit=crop&q=90',
+];
+const GREEN_IMGS=[
+  'assets/frames/green/green1.jpg',
+  'assets/frames/green/green2.jpg',
+  'assets/frames/green/green3.jpg',
+  'assets/frames/green/green4.jpg',
+];
+const GREEN_FALLBACK=[
+  'https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=1400&auto=format&fit=crop&q=90',
+  'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=1400&auto=format&fit=crop&q=90',
+  'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1400&auto=format&fit=crop&q=90',
+  'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=1400&auto=format&fit=crop&q=90',
+];
+const oF=[],gF=[];
+
+function loadWithFallback(locals,fallbacks,arr,onEach){
+  locals.forEach((loc,i)=>{
+    const img=new Image();img.crossOrigin='anonymous';
+    img.onload=()=>{arr[i]=img;onEach(i);};
+    img.onerror=()=>{
+      const img2=new Image();img2.crossOrigin='anonymous';
+      img2.onload=()=>{arr[i]=img2;onEach(i);};
+      img2.onerror=()=>{onEach(i);};
+      img2.src=fallbacks[i];
+    };
+    img.src=loc;
+  });
+}
+
+function resizeC(c){c.width=c.offsetWidth*devicePixelRatio;c.height=c.offsetHeight*devicePixelRatio;}
+
+function drawCover(ctx,canvas,img,alpha=1){
+  if(!img)return;
+  const cw=canvas.width,ch=canvas.height;
+  const scale=Math.max(cw/img.width,ch/img.height);
+  const sw=img.width*scale,sh=img.height*scale;
+  const sx=(cw-sw)/2,sy=(ch-sh)/2;
+  ctx.globalAlpha=alpha;
+  ctx.drawImage(img,sx,sy,sw,sh);
+  ctx.globalAlpha=1;
+}
+
+function addVignette(ctx,w,h){
+  const vg=ctx.createRadialGradient(w/2,h/2,h*.18,w/2,h/2,h*.88);
+  vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.52)');
+  ctx.fillStyle=vg;ctx.fillRect(0,0,w,h);
+}
+
+function renderSeq(ctx,canvas,frames,progress){
+  const n=frames.length;if(!n)return;
+  const raw=progress*(n-1);
+  const lo=Math.floor(raw),hi=Math.min(lo+1,n-1);
+  const t=raw-lo;
+  if(frames[lo])drawCover(ctx,canvas,frames[lo],1);
+  if(frames[hi]&&t>0.01){
+    ctx.save();ctx.globalAlpha=t;
+    const img=frames[hi];const cw=canvas.width,ch=canvas.height;
+    const scale=Math.max(cw/img.width,ch/img.height);
+    ctx.drawImage(img,(cw-img.width*scale)/2,(ch-img.height*scale)/2,img.width*scale,img.height*scale);
+    ctx.globalAlpha=1;ctx.restore();
+  }
+  addVignette(ctx,canvas.width,canvas.height);
+}
+
+function initCanvases(){resizeC(c1);resizeC(c2);if(oF[0])renderSeq(x1,c1,oF,0);if(gF[0])renderSeq(x2,c2,gF,0);}
+window.addEventListener('resize',initCanvases);
+
+let oR=0;
+loadWithFallback(ORANGE_IMGS,ORANGE_FALLBACK,oF,()=>{oR++;if(oR===1){resizeC(c1);renderSeq(x1,c1,oF,lp1);}});
+loadWithFallback(GREEN_IMGS,GREEN_FALLBACK,gF,()=>{resizeC(c2);renderSeq(x2,c2,gF,lp2);});
+setTimeout(initCanvases,150);
+
+const ftxts=[
+  ['Vitamin-Packed<br>Refreshment','A natural energy boost that revitalizes your body from the inside out.','1 / 5'],
+  ['Sun-Ripened<br>Goodness','Hand-picked at the perfect moment of ripeness for maximum nutrition.','2 / 5'],
+  ['Pure & Fresh<br>Every Drop','No heat, no compromise — cold-pressed perfection in every bottle.','3 / 5'],
+  ['Nature\'s Finest<br>Delivered','Farm to bottle in under 24 hours. Taste the difference freshness makes.','4 / 5'],
+  ['100% Real<br>No Shortcuts','What goes in the bottle is exactly what the earth intended. Nothing more.','5 / 5'],
+];
+let lp1=0,lp2=0,ltxt=-1;
+const fh1=document.getElementById('fh1'),fp1=document.getElementById('fp1'),fpf1=document.getElementById('fpf1'),fplbl=document.getElementById('fplbl');
+
+function handleCanvasScroll(){
+  if(document.getElementById('page-home').classList.contains('active')){
+    const s1=document.getElementById('fs1'),r1=s1.getBoundingClientRect();
+    const p1=Math.max(0,Math.min(1,-r1.top/(r1.height-innerHeight)));
+    if(Math.abs(p1-lp1)>.004){lp1=p1;renderSeq(x1,c1,oF,p1);fpf1.style.width=(p1*100)+'%';
+      const ti=Math.min(Math.floor(p1*ftxts.length),ftxts.length-1);
+      if(ti!==ltxt){ltxt=ti;fh1.style.opacity='0';fh1.style.transform='translateY(14px)';
+        setTimeout(()=>{fh1.innerHTML=ftxts[ti][0];fp1.textContent=ftxts[ti][1];fplbl.textContent=ftxts[ti][2];fh1.style.opacity='1';fh1.style.transform='none';},220);}
+    }
+    const s2=document.getElementById('fs2'),r2=s2.getBoundingClientRect();
+    const p2=Math.max(0,Math.min(1,-r2.top/(r2.height-innerHeight)));
+    if(Math.abs(p2-lp2)>.004){lp2=p2;renderSeq(x2,c2,gF,p2);}
+  }
+}
+
+// ════════════════════════════════════════════
+// PRODUCT CAROUSEL
+// ════════════════════════════════════════════
+const ci=document.getElementById('ci'),cw2=document.getElementById('cw');
+let off=0;const cw3=268+24;
+const mxOff=()=>-(ci.children.length*cw3-cw2.offsetWidth);
+document.getElementById('nB').addEventListener('click',()=>{off=Math.max(mxOff(),off-cw3*2);ci.style.transform=`translateX(${off}px)`;});
+document.getElementById('pB').addEventListener('click',()=>{off=Math.min(0,off+cw3*2);ci.style.transform=`translateX(${off}px)`;});
+let drag=false,dsx=0,dso=0;
+cw2.addEventListener('mousedown',e=>{drag=true;dsx=e.clientX;dso=off;});
+window.addEventListener('mousemove',e=>{if(!drag)return;off=Math.max(mxOff(),Math.min(0,dso+e.clientX-dsx));ci.style.transform=`translateX(${off}px)`;});
+window.addEventListener('mouseup',()=>drag=false);
+cw2.addEventListener('touchstart',e=>{drag=true;dsx=e.touches[0].clientX;dso=off;},{passive:true});
+window.addEventListener('touchmove',e=>{if(!drag)return;off=Math.max(mxOff(),Math.min(0,dso+e.touches[0].clientX-dsx));ci.style.transform=`translateX(${off}px)`;},{passive:true});
+window.addEventListener('touchend',()=>drag=false);
+
+// ════════════════════════════════════════════
+// SCROLL REVEALS
+// ════════════════════════════════════════════
+function setupReveal(){
+  const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv,.rvl,.rvr,.stag').forEach(el=>io.observe(el));
+}
+setupReveal();
+setTimeout(initCanvases,300);
+</script>
+</body>
+</html>
