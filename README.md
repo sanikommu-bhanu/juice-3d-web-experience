@@ -1,7 +1,7 @@
 # 🍊 LIQUID VITALITY — Project README
 
 **Premium Cold-Pressed Juice Website**
-Built by Claude AI • Full website with Sign In, Cart, Billing & Account
+Built by feontend • Full website with Sign In, Cart, Billing & Account
 
 ---
 
@@ -158,13 +158,3 @@ To put it online for free:
 - To add real auth, connect to **Firebase**, **Supabase**, or any backend.
 - To add real payments, integrate **Stripe** or **PayPal**.
 - The website is fully **mobile responsive**.
-
----
-
-## 📞 NEED HELP?
-
-Ask Claude at **claude.ai** — just paste your question and share any errors.
-
----
-
-*Liquid Vitality © 2026 — Built with ❤️ and Claude AI*
